@@ -42,7 +42,10 @@ FROM producto;
 
 -- 10
 
-SELECT nombre , cast(precio as int)
+SELECT nombre , TRUNCATE(precio,0 )
+FROM producto;
+
+SELECT nombre , cast(precio AS INT)
 FROM producto;
 
 -- 11
@@ -153,27 +156,91 @@ FROM producto p
 JOIN fabricante f ON p.codigo_fabricante = f.codigo
 WHERE f.nombre = 'crucial' AND p.precio > 200;
 
+-- 28
+
+SELECT p.nombre, p.precio, f.nombre
+FROM producto p 
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE f.nombre = 'ASUS' OR f.nombre = 'hewlett-packard' OR f.nombre = 'seagate';
+
+-- 29
+
+SELECT p.nombre, p.precio, f.nombre
+FROM producto p 
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE f.nombre IN ('asus','hewlett-packard', 'seagate');
+
+-- 30
+
+SELECT nombre, precio
+FROM producto 
+WHERE nombre LIKE '%e';
+
+-- 31 
+
+SELECT nombre, precio
+FROM producto 
+WHERE nombre LIKE '%w%';
+
+-- 32
+
+SELECT p.nombre, p.precio, f.nombre
+FROM producto p 
+JOIN fabricante f ON p.codigo_fabricante = f.codigo
+WHERE precio >= 180 
+ORDER BY p.precio DESC, p.nombre;
+
+-- 33
+
+SELECT f.codigo, f.nombre
+FROM fabricante f
+JOIN  producto p ON p.codigo_fabricante = f.codigo
+GROUP BY NOMBRE;
+
+-- 34
+
+SELECT f.codigo, f.nombre, P.NOMBRE
+FROM fabricante f
+LEFT JOIN  producto p ON f.codigo = p.codigo_fabricante;
 
 
+-- 35
+
+SELECT f.codigo, f.nombre, P.NOMBRE
+FROM fabricante f
+LEFT JOIN  producto p ON f.codigo = p.codigo_fabricante
+WHERE p.nombre IS NULL;
+
+-- 36
+
+SELECT *
+FROM producto
+WHERE codigo_fabricante = (SELECT codigo FROM FABRICANTE WHERE nombre = 'lenovo');
+
+-- 37
+
+SELECT *
+FROM producto
+WHERE precio =(SELECT MAX(precio) FROM producto WHERE codigo_fabricante =(SELECT nombre FROM fabricante WHERE nombre LIKE 'lenovo'));
 
 
+-- 38
 
+SELECT nombre
+FROM producto WHERE precio =(SELECT Max(precio) FROM producto WHERE codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre LIKE 'lenovo'));
 
+-- 39
 
+SELECT nombre
+FROM producto WHERE precio = (SELECT Min(precio) FROM producto WHERE codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre LIKE 'hewlett-packard'));
 
+-- 40
 
+SELECT * 
+FROM producto
+WHERE precio >= (SELECT max(precio) FROM producto WHERE codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre LIKE 'lenovo'));
 
+-- 41
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT *
+FROM producto WHERE precio >= (SELECT avg(precio) FROM producto WHERE codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre LIKE 'asus')) AND codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre LIKE 'asus'); 

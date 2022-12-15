@@ -141,6 +141,54 @@ FROM departamento d
  -- 3.5
  
  SELECT g.nombre, count(a.id_grado)
-FROM grado g
+ FROM grado g
  LEFT JOIN asignatura a ON g.id = a.id_grado
  GROUP BY g.nombre;
+ 
+ -- 3.6 
+ 
+SELECT g.nombre, count(a.id_grado)
+FROM grado g
+JOIN asignatura a ON g.id = a.id_grado
+GROUP BY id_grado
+HAVING COUNT(A.id_grado) > 40;
+
+-- 3.7
+
+SELECT g.nombre, a.nombre, COUNT(a.creditos)
+FROM grado g
+JOIN asignatura a ON g.id = a.id_grado
+GROUP BY a.tipo;
+
+-- 3.8
+
+SELECT anyo_inicio, count(asma.id_curso_escolar)
+FROM curso_escolar ce
+LEFT JOIN asignatura a ON ce.id = a.curso
+LEFT JOIN alumno_se_matricula_asignatura asma ON ce.id = asma.id_curso_escolar
+GROUP BY asma.id_curso_escolar;
+
+-- 3.9
+
+SELECT P.ID, P.nombre, p.apellido1, p.apellido2, count(a.id_profesor)
+FROM persona P  
+LEFT JOIN asignatura a ON p.id = a.id_profesor
+WHERE p.tipo LIKE 'profesor'
+GROUP BY P.ID;
+
+-- 3.10
+
+SELECT * 
+FROM persona
+WHERE tipo LIKE 'alumno'
+ORDER BY fecha_nacimiento DESC
+LIMIT 1;
+
+-- 3.11
+
+SELECT P.*
+FROM persona p 
+JOIN profesor pr ON p.id = pr.id_profesor
+LEFT JOIN asignatura a ON p.id = a.id_profesor
+WHERE p.tipo LIKE 'profesor' AND a.id_profesor IS NULL
+group by p.id;
