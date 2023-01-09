@@ -1,13 +1,19 @@
 -- 1
+
 SELECT nombre 
 FROM producto;
 
 -- 2
+
 SELECT nombre, precio
 FROM producto;
 
 -- 3
+
 SELECT *
+FROM producto;
+
+SHOW COLUMNS
 FROM producto;
 
 -- 4
@@ -50,15 +56,14 @@ FROM producto;
 
 -- 11
 
-SELECT F.codigo
-FROM producto P
-JOIN fabricante F ON P.codigo_fabricante = F.codigo;
+SELECT codigo_fabricante
+FROM producto;
 
 -- 12
 
-SELECT distinct F.codigo
-FROM producto P
-JOIN fabricante F ON P.codigo_fabricante = F.codigo;
+SELECT codigo_fabricante
+FROM producto
+group by codigo_fabricante;
 
 -- 13 
 
@@ -221,7 +226,7 @@ WHERE codigo_fabricante = (SELECT codigo FROM FABRICANTE WHERE nombre = 'lenovo'
 
 SELECT *
 FROM producto
-WHERE precio =(SELECT MAX(precio) FROM producto WHERE codigo_fabricante =(SELECT nombre FROM fabricante WHERE nombre LIKE 'lenovo'));
+WHERE precio =(SELECT MAX(precio) FROM producto WHERE codigo_fabricante in (SELECT codigo FROM fabricante WHERE nombre = 'LENOVO'));
 
 
 -- 38

@@ -62,7 +62,7 @@ JOIN grado gr ON gr.id = a.id_grado;
 
 -- 1.9
 
-SELECT DISTINCT pe.apellido1, pe.apellido2, pe.nombre
+SELECT DISTINCT pe.id, pe.apellido1, pe.apellido2, pe.nombre
 FROM persona pe 
 JOIN alumno_se_matricula_asignatura asma ON pe.id = asma.id_alumno 
 WHERE id_curso_escolar = 5;
@@ -79,7 +79,7 @@ ORDER BY de.nombre, pe.apellido1, pe.apellido2, pe.nombre;
 
 Select *
 FROM persona pe
-LEFT JOIN profesor pr ON pe.id = pr.id_profesor
+RIGHT JOIN profesor pr ON pe.id = pr.id_profesor
 WHERE tipo = 'profesor' AND pr.id_departamento IS NULL;
 
 -- 2.3
@@ -93,8 +93,8 @@ WHERE pr.id_departamento IS NULL;
 
 Select *
 FROM persona p 
- JOIN profesor pr ON p.id = pr.id_profesor
- LEFT JOIN asignatura a ON pr.id_profesor = a.id_profesor
+RIGHT JOIN profesor pr ON p.id = pr.id_profesor
+LEFT JOIN asignatura a ON pr.id_profesor = a.id_profesor
 WHERE a.id_profesor IS NULL;
 
 -- 2.5
@@ -107,8 +107,8 @@ WHERE id_profesor IS NULL;
 
 SELECT d.nombre
 FROM departamento d 
- LEFT JOIN profesor pr ON d.id = pr.id_departamento
- JOIN asignatura a USING (id_profesor)
+LEFT JOIN profesor pr ON d.id = pr.id_departamento
+LEFT JOIN asignatura a USING (id_profesor)
 WHERE a.curso IS NULL;
 
 -- 3.1
@@ -128,22 +128,24 @@ AND fecha_nacimiento <= '1999-12-31';
 
 SELECT d.nombre, count(id_departamento)
 FROM departamento d 
- JOIN profesor p ON d.id = p.id_departamento
- GROUP BY d.nombre;
+JOIN profesor p ON d.id = p.id_departamento
+GROUP BY d.nombre
+ORDER BY count(id_departamento) DESC;
  
  -- 3.4
  
- SELECT d.nombre, count(id_departamento)
+SELECT d.nombre, count(id_departamento)
 FROM departamento d 
- LEFT JOIN profesor p ON d.id = p.id_departamento
- GROUP BY d.nombre;
+LEFT JOIN profesor p ON d.id = p.id_departamento
+GROUP BY d.nombre;
  
  -- 3.5
  
- SELECT g.nombre, count(a.id_grado)
- FROM grado g
- LEFT JOIN asignatura a ON g.id = a.id_grado
- GROUP BY g.nombre;
+SELECT g.nombre, count(a.id_grado)
+FROM grado g
+LEFT JOIN asignatura a ON g.id = a.id_grado
+GROUP BY g.nombre
+ORDER BY count(a.id_grado) DESC;
  
  -- 3.6 
  
@@ -158,11 +160,11 @@ HAVING COUNT(A.id_grado) > 40;
 SELECT g.nombre, a.nombre, COUNT(a.creditos)
 FROM grado g
 JOIN asignatura a ON g.id = a.id_grado
-GROUP BY a.tipo;
+GROUP BY g.nombre, a.tipo, a.creditos;
 
 -- 3.8
 
-SELECT anyo_inicio, count(asma.id_curso_escolar)
+SELECT ce.anyo_inicio, count(asma.id_alumno)
 FROM curso_escolar ce
 LEFT JOIN asignatura a ON ce.id = a.curso
 LEFT JOIN alumno_se_matricula_asignatura asma ON ce.id = asma.id_curso_escolar
@@ -174,7 +176,8 @@ SELECT P.ID, P.nombre, p.apellido1, p.apellido2, count(a.id_profesor)
 FROM persona P  
 LEFT JOIN asignatura a ON p.id = a.id_profesor
 WHERE p.tipo LIKE 'profesor'
-GROUP BY P.ID;
+GROUP BY P.ID
+ORDER BY count(a.id_profesor) DESC;
 
 -- 3.10
 
